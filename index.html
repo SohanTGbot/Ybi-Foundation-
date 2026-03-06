@@ -337,17 +337,8 @@
         .qr-placeholder {
             width: 70px;
             height: 70px;
-            background: white;
-            border: 2px solid #000;
             margin-bottom: 4px;
-            /* Simulated QR code pattern */
-            background-image:
-                linear-gradient(45deg, #000 25%, transparent 25%),
-                linear-gradient(-45deg, #000 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #000 75%),
-                linear-gradient(-45deg, transparent 75%, #000 75%);
-            background-size: 10px 10px;
-            background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+            object-fit: contain;
         }
 
         .qr-text {
@@ -656,7 +647,7 @@
 
                     <div class="cert-footer-grid">
                         <div class="cert-qr-area">
-                            <div class="qr-placeholder"></div>
+                            <img src="qr.png" alt="QR Code" class="qr-placeholder">
                             <div class="qr-text">Scan QR Code</div>
                         </div>
 
