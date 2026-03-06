@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ybi Foundation - Certificate Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;1,800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #f97316;
+            --primary-orange-hover: #ea580c;
+            --dark-navy: #0f172a;
+            --yellow-stripe: #eab308;
+            --bg-color: #f1f5f9;
+            --text-main: #334155;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #ffffff;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin-right: 4rem;
+        }
+
+        .search-bar {
+            display: flex;
+            height: 36px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            width: 14px;
+            height: 14px;
+            color: #94a3b8;
+        }
+
+        .search-input {
+            height: 100%;
+            border: 1px solid #cbd5e1;
+            border-right: none;
+            border-radius: 6px 0 0 6px;
+            padding-left: 36px;
+            padding-right: 16px;
+            font-size: 14px;
+            outline: none;
+            width: 250px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-btn {
+            height: 100%;
+            background-color: var(--primary-orange);
+            border: none;
+            border-radius: 0 6px 6px 0;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 0 24px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-orange-hover);
+        }
+
+        /* MAIN CONTENT */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem 1rem;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title span {
+            color: #3b82f6;
+            /* slightly blueish or slate? Original looks slate, but name is uppercase */
+            text-transform: uppercase;
+            color: #475569;
+        }
+
+        .content-grid {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        /* CERTIFICATE AREA */
+        .certificate-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            position: relative;
+            width: 100%;
+            max-width: 780px;
+            flex-grow: 1;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .cert-left-bar {
+            width: 50px;
+            background-color: var(--dark-navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .cert-left-bar .cert-text {
+            color: white;
+            transform: rotate(-90deg);
+            font-size: 1.25rem;
+            letter-spacing: 6px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .cert-yellow-stripe {
+            width: 8px;
+            background-color: var(--yellow-stripe);
+            height: 100%;
+        }
+
+        .cert-body {
+            padding: 2rem 2.5rem;
+            flex-grow: 1;
+            position: relative;
+            background-image: radial-gradient(#f1f5f9 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+        }
+
+        /* Watermark */
+        .cert-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 7rem;
+            color: rgba(226, 232, 240, 0.35);
+            font-weight: 800;
+            white-space: nowrap;
+            z-index: -1;
+            pointer-events: none;
+            line-height: 1;
+            text-align: center;
+            width: 100%;
+        }
+
+        .cert-watermark span {
+            display: block;
+        }
+
+        /* Cert Header */
+        .cert-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .cert-iso-logo {
+            display: flex;
+            align-items: center;
+            font-weight: 800;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .cert-iso-logo span.iso {
+            font-size: 32px;
+            color: #000;
+        }
+
+        .cert-iso-logo span.cert {
+            font-size: 10px;
+            display: block;
+            letter-spacing: 2px;
+        }
+
+        .cert-iso-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 8px;
+        }
+
+        .cert-iso-logo-v {
+            color: #fbba00;
+            font-size: 32px;
+            margin-right: 4px;
+            font-style: italic;
+        }
+
+        .cert-corp-id {
+            text-align: center;
+            flex-grow: 1;
+            font-size: 11px;
+            font-weight: 700;
+            padding-top: 8px;
+        }
+
+        .cert-corp-id span {
+            display: block;
+            font-size: 13px;
+        }
+
+        .cert-top-right {
+            text-align: right;
+            font-size: 10px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .cert-orange-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        /* Cert Content */
+        .cert-main-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: black;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .cert-certify-text {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: black;
+        }
+
+        .cert-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-style: italic;
+            color: #1a56db;
+            /* Deep blue */
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .cert-desc {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.5;
+            max-width: 90%;
+            margin-bottom: 1rem;
+            color: black;
+        }
+
+        .cert-course {
+            color: #7e22ce;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cert-period {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: black;
+        }
+
+        /* Cert Footer */
+        .cert-footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .cert-qr-area {
+            text-align: center;
+        }
+
+        .qr-placeholder {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border: 2px solid #000;
+            margin-bottom: 4px;
+            /* Simulated QR code pattern */
+            background-image:
+                linear-gradient(45deg, #000 25%, transparent 25%),
+                linear-gradient(-45deg, #000 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #000 75%),
+                linear-gradient(-45deg, transparent 75%, #000 75%);
+            background-size: 10px 10px;
+            background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
+        }
+
+        .qr-text {
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .cert-logos-area {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            padding-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .msme-icon {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .iso-bottom-icon {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .cert-signature-area {
+            text-align: center;
+            position: relative;
+        }
+
+        .stamp-placeholder {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            z-index: -1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stamp-placeholder::after {
+            content: "";
+            width: 70px;
+            height: 70px;
+            border: 1px dashed rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+        }
+
+        .signature-line {
+            border-bottom: 1px solid #000;
+            width: 140px;
+            margin: 0 auto 4px auto;
+            position: relative;
+        }
+
+        .signature-text {
+            font-family: 'Caveat', cursive, 'Brush Script MT', calc();
+            font-size: 24px;
+            color: rgba(0, 0, 0, 0.8);
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-5deg);
+            white-space: nowrap;
+        }
+
+        .signatory-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: black;
+        }
+
+        .signatory-title {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .issue-date-label {
+            font-size: 10px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .issue-date-val {
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .cert-bottom-red {
+            color: #dc2626;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .cert-website-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            color: black;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 12px;
+        }
+
+        /* RIGHT COLUMN */
+        .details-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 1.25rem;
+        }
+
+        .detail-label {
+            width: 120px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #f1f5f9;
+            margin: 1.5rem 0;
+            border: none;
+        }
+
+        .issued-by-text {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+
+        .issued-by-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-box {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .copy-btn {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0.75rem;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+            display: block;
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-orange-hover);
+        }
+
+        /* FOOTER */
+        .page-footer {
+            background-color: #e2e8f0;
+            padding: 1.5rem 2rem;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: auto;
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 992px) {
+            .content-grid {
+                flex-direction: column;
+            }
+
+            .details-card {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .cert-website-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .cert-footer-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .header {
+                padding: 0 1rem;
+            }
+
+            .search-input {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <img src="logo.png" alt="Ybi Foundation Logo" class="header-logo">
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" id="credentialInput" class="search-input" placeholder="Enter the credential ID">
+            </div>
+            <button id="verifyBtn" class="search-btn">Verify</button>
+        </div>
+    </header>
+
+    <main id="mainContent" class="main-container">
+        <h2 class="page-title">This certificate was issued to <span>SOHAN MANDAL</span></h2>
+
+        <div class="content-grid">
+
+            <!-- Certificate Card -->
+            <div class="certificate-card">
+                <div class="cert-left-bar">
+                    <div class="cert-text">CERTIFICATE</div>
+                </div>
+                <div class="cert-yellow-stripe"></div>
+
+                <div class="cert-body">
+                    <div class="cert-watermark">
+                        <span>Ybi</span>
+                        <span>Foundation</span>
+                    </div>
+
+                    <div class="cert-header-row">
+                        <div class="cert-iso-logo">
+                            <span class="cert-iso-logo-v">✓</span>
+                            <div class="cert-iso-info">
+                                <span class="iso">ISO</span>
+                                <span class="cert">CERTIFIED</span>
+                            </div>
+                            <div style="font-size: 9px; margin-left:8px; line-height: 1.2;">9001<br>2015</div>
+                        </div>
+
+                        <div class="cert-corp-id">
+                            Corporate Identification Number
+                            <span>U80903DL2020NPL371984</span>
+                        </div>
+
+                        <div class="cert-top-right">
+                            19894000005242377<br>
+                            <img src="logo.png" alt="Logo" class="cert-orange-icon">
+                        </div>
+                    </div>
+
+                    <h1 class="cert-main-title">Ybi Foundation</h1>
+                    <div class="cert-certify-text">This is to Certify that</div>
+                    <div class="cert-name">SOHAN MANDAL</div>
+
+                    <div class="cert-desc">
+                        has self motivation and willingness to learn, engage in day to day tasks and projects with high
+                        level of professionalism in
+                    </div>
+
+                    <div class="cert-course">Artificial Intelligence and Generative Ai</div>
+
+                    <div class="cert-period">Internship Period: 1 Month, Completion on: Monday, Sep 22 2025</div>
+
+                    <div class="cert-footer-grid">
+                        <div class="cert-qr-area">
+                            <div class="qr-placeholder"></div>
+                            <div class="qr-text">Scan QR Code</div>
+                        </div>
+
+                        <div class="cert-logos-area">
+                            <img src="mca_logo.png" alt="Ministry of Corporate Affairs Govt of India" class="msme-icon">
+                            <img src="iso_logo.png" alt="ISO 9001 Certified" class="iso-bottom-icon">
+                        </div>
+
+                        <div class="cert-signature-area">
+                            <div class="stamp-placeholder">
+                                <span style="font-size: 8px; color: rgba(0,0,0,0.2); transform: rotate(-30deg);">YBI
+                                    FOUNDATION</span>
+                            </div>
+                            <div class="signature-line">
+                                <div class="signature-text" style="font-family: inherit; font-style: italic;">Dr. Alok
+                                    Yadav</div>
+                            </div>
+                            <div class="signatory-name">Dr. Alok Yadav</div>
+                            <div class="signatory-title">SOHAN MANDAL</div>
+                            <div class="issue-date-label">Issue Date:</div>
+                            <div class="issue-date-val">Monday, Sep 22 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="cert-bottom-red">
+                        Check Credential Id for Certificate Verification : UT9ZSIHPB17R5
+                    </div>
+
+                    <div class="cert-website-info">
+                        <div>www.ybifoundation.com</div>
+                        <div>(+91) 966 798 7711</div>
+                        <div>support@ybifoundation.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Card -->
+            <div class="details-card">
+                <div class="detail-row">
+                    <div class="detail-label">Learner Name :</div>
+                    <div class="detail-value">SOHAN MANDAL</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Document :</div>
+                    <div class="detail-value">ACR</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Course Name :</div>
+                    <div class="detail-value">1-Month Intern @Ybi Foundation</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Credential Id :</div>
+                    <div class="detail-value">UT9ZSIHPB17R5</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Issued On :</div>
+                    <div class="detail-value">Monday, Sep 22 2025</div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="issued-by-text">This certificate has been issued by</div>
+                <div class="issued-by-logo">
+                    <img src="logo.png" alt="Logo" class="logo-box">
+                </div>
+
+                <button class="copy-btn">Copy link</button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ERROR MESSAGE CONTAINER (Hidden by Default) -->
+    <div id="errorContainer" class="main-container"
+        style="display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding-top: 5rem;">
+        <svg fill="none" stroke="#ef4444" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+            style="width: 64px; height: 64px; margin-bottom: 1rem;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h2 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 0.5rem; font-weight: 700;">Certificate Not Found
+        </h2>
+        <p style="color: #64748b; font-size: 1rem; max-width: 400px;">We could not locate a certificate matching the
+            provided Credential ID. Please verify the ID and try again.</p>
+    </div>
+
+    <footer class="page-footer">
+        Powered by Ybi Foundation
+    </footer>
+
+    <script>
+        const validId = "UT9ZSIHPB17R5";
+        const credentialInput = document.getElementById("credentialInput");
+        const verifyBtn = document.getElementById("verifyBtn");
+        const mainContent = document.getElementById("mainContent");
+        const errorContainer = document.getElementById("errorContainer");
+
+        function handleVerification() {
+            const enteredId = credentialInput.value.trim();
+            if (!enteredId) return;
+
+            if (enteredId === validId) {
+                // If the ID matches, reload to reveal the fresh clean certificate.
+                mainContent.style.display = "block";
+                errorContainer.style.display = "none";
+                alert("Certificate Validated Successfully!");
+            } else {
+                // If it doesn't match, hide the main certificate and show the error.
+                mainContent.style.display = "none";
+                errorContainer.style.display = "flex";
+            }
+        }
+
+        verifyBtn.addEventListener("click", handleVerification);
+
+        credentialInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                handleVerification();
+            }
+        });
+    </script>
+</body>
+
+</html>
